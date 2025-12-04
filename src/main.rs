@@ -1,6 +1,8 @@
 use actix_web::{web, App, HttpResponse, HttpServer, HttpRequest};
 use actix_files as fs;
 
+mod db;
+
 async fn index(req: HttpRequest) -> HttpResponse {
     println!("GET {} - {}", req.path(), req.connection_info().realip_remote_addr().unwrap_or("unknown"));
     HttpResponse::Ok()
