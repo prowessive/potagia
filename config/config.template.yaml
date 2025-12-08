@@ -9,3 +9,6 @@ database:
   username: "postgres"
   password: "postgres"
   database: "postgres"
+
+schema:
+  path: "config/schema.json"

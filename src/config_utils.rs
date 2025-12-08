@@ -7,6 +7,7 @@ use std::io::Read;
 pub struct Config {
     pub server: ServerConfig,
     pub database: DatabaseConfig,
+    pub schema: SchemaConfig,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -15,7 +16,7 @@ pub struct ServerConfig {
     pub port: u16,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct DatabaseConfig {
     pub db_type: String,
     pub host: String,
@@ -23,6 +24,11 @@ pub struct DatabaseConfig {
     pub username: String,
     pub password: String,
     pub database: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct SchemaConfig {
+    pub path: String,
 }
 
 pub async fn load_config(config_path: String) -> Result<Config, Box<dyn std::error::Error>> {
@@ -58,6 +64,8 @@ database:
   username: "user"
   password: "pass"
   database: "test_db"
+schema:
+  path: "config/schema.json"
 "#;
         let temp_file = create_test_config_file(yaml_content);
         let config = load_config(temp_file.path().to_str().unwrap().to_string())
@@ -72,6 +80,7 @@ database:
         assert_eq!(config.database.username, "user");
         assert_eq!(config.database.password, "pass");
         assert_eq!(config.database.database, "test_db");
+        assert_eq!(config.schema.path, "config/schema.json");
     }
 
     #[tokio::test]
@@ -118,6 +127,9 @@ server:
                 password: "secret".to_string(),
                 database: "my_db".to_string(),
             },
+            schema: SchemaConfig {
+                path: "config/schema.json".to_string(),
+            },
         };
 
         let yaml = serde_yaml::to_string(&config).expect("Failed to serialize config");
@@ -127,5 +139,39 @@ server:
         assert_eq!(deserialized.server.host, config.server.host);
         assert_eq!(deserialized.server.port, config.server.port);
         assert_eq!(deserialized.database.db_type, config.database.db_type);
+    }
+
+    #[test]
+    fn test_schema_config_serialization() {
+        let schema_config = SchemaConfig {
+            path: "config/schema.json".to_string(),
+        };
+
+        let yaml =
+            serde_yaml::to_string(&schema_config).expect("Failed to serialize schema config");
+        let deserialized: SchemaConfig =
+            serde_yaml::from_str(&yaml).expect("Failed to deserialize schema config");
+
+        assert_eq!(deserialized.path, schema_config.path);
+    }
+
+    #[test]
+    fn test_schema_config_deserialization() {
+        let yaml_content = r#"
+path: "schemas/my_schema.json"
+"#;
+        let schema_config: SchemaConfig =
+            serde_yaml::from_str(yaml_content).expect("Failed to deserialize schema config");
+
+        assert_eq!(schema_config.path, "schemas/my_schema.json");
+    }
+
+    #[test]
+    fn test_schema_config_missing_path() {
+        let yaml_content = r#"
+other_field: "value"
+"#;
+        let result: Result<SchemaConfig, _> = serde_yaml::from_str(yaml_content);
+        assert!(result.is_err());
     }
 }

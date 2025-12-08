@@ -1,5 +1,8 @@
 mod config_utils;
+mod ddl_utils;
+mod json_to_db;
 
+use crate::json_to_db::JsonToDb;
 use actix_files as fs;
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
 
@@ -21,6 +24,27 @@ async fn main() -> std::io::Result<()> {
     let cfg = config_utils::load_config("config/config.yaml".to_string())
         .await
         .expect("Failed to load config");
+    // Load schema and create database tables
+    let json_to_db = JsonToDb::from_file(&cfg.schema.path, cfg.database.clone())
+        .expect("Failed to load schema from file");
+    // Create tables based on a database type
+    match cfg.database.db_type.as_str() {
+        "postgres" => {
+            json_to_db
+                .create_tables_postgres()
+                .await
+                .expect("Failed to create postgres tables");
+        }
+        "mysql" => {
+            json_to_db
+                .create_tables_mysql()
+                .await
+                .expect("Failed to create MySQL tables");
+        }
+        _ => {
+            panic!("Unsupported database type: {}", cfg.database.db_type);
+        }
+    }
     println!(
         "Server running on http://{}:{}",
         cfg.server.host, cfg.server.port
