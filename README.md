@@ -2,7 +2,7 @@
 
 ## Description
 
-Potagia is a tool to generate a web application from a data model. Generates api and frontend from a json file containing the model.
+Potagia is a tool to generate a web application from a data model. Generates api and frontend from a JSON file containing the model.
 
 ## Build
 

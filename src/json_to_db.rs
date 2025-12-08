@@ -426,7 +426,6 @@ impl JsonToDb {
             other => other.to_string(),
         }
     }
-
 }
 
 #[cfg(test)]
