@@ -262,7 +262,7 @@ impl JsonToDb {
 
             if added_this_round.is_empty() && !remaining.is_empty() {
                 // Circular dependency detected, add remaining tables
-                ordered.extend(remaining.drain(..));
+                ordered.append(&mut remaining);
                 break;
             }
 
