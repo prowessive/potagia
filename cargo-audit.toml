@@ -1,0 +1,11 @@
+[advisories]
+# Suppress known vulnerabilities that are accepted risks
+
+# RUSTSEC-2023-0071: Marvin Attack in rsa 0.9.9
+# This is a transitive dependency from sqlx-mysql 0.8.6
+# Risk: Timing sidechannel attack for RSA key recovery
+# Mitigation: MySQL connections are on trusted networks
+# Status: No fix available in sqlx 0.8.x series, waiting for sqlx 0.9 stable release
+ignore = [
+    "RUSTSEC-2023-0071",
+]
