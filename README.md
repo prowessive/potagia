@@ -10,6 +10,7 @@ Potagia is a tool to generate a web application from a data model. Generates api
 Execute docker-compose up:
 ```
 cp config/.env.template config/.env
+cp templates/potagia_model.json config/schema.json
 docker-compose --env-file config/.env up 
 cargo run
 ```

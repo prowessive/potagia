@@ -73,7 +73,7 @@ fn load_schema_from_file<P: AsRef<Path>>(json_path: P) -> Result<DatabaseSchema,
 
 #[cfg(test)]
 fn generate_create_table_postgres(table_name: &str, table: &TableDefinition) -> String {
-    generate_create_table_generic(table_name, table, |col_type| col_type.to_string(), "")
+    JsonToDb::generate_create_table_static(table_name, table, |col_type| col_type.to_string(), "")
 }
 
 #[cfg(test)]
@@ -84,90 +84,6 @@ fn generate_create_indexes(table_name: &str, table: &TableDefinition) -> Vec<Str
 #[cfg(test)]
 fn sort_tables_by_dependencies(schema: &DatabaseSchema) -> Vec<String> {
     JsonToDb::sort_tables_by_dependencies_static(schema)
-}
-
-#[cfg(test)]
-fn generate_create_table_generic<F>(
-    table_name: &str,
-    table: &TableDefinition,
-    type_converter: F,
-    table_suffix: &str,
-) -> String
-where
-    F: Fn(&str) -> String,
-{
-    let mut columns_sql = Vec::new();
-    let mut primary_keys = Vec::new();
-    let mut foreign_keys = Vec::new();
-
-    // Sort columns to ensure consistent ordering (primary keys first)
-    let mut sorted_columns: Vec<_> = table.columns.iter().collect();
-    sorted_columns.sort_by(|a, b| {
-        let a_pk = a.1.primary_key;
-        let b_pk = b.1.primary_key;
-        b_pk.cmp(&a_pk).then(a.0.cmp(b.0))
-    });
-
-    for (col_name, col_def) in sorted_columns {
-        let col_type = type_converter(&col_def.column_type);
-        let mut col_sql = format!("    {} {}", col_name, col_type);
-
-        if col_def.not_null || col_def.primary_key {
-            col_sql.push_str(" NOT NULL");
-        }
-
-        if col_def.unique && !col_def.primary_key {
-            col_sql.push_str(" UNIQUE");
-        }
-
-        if let Some(ref default) = col_def.default {
-            let default_str = match default {
-                serde_json::Value::Bool(b) => b.to_string(),
-                serde_json::Value::String(s) => s.clone(),
-                serde_json::Value::Number(n) => n.to_string(),
-                _ => default.to_string(),
-            };
-            col_sql.push_str(&format!(" DEFAULT {}", default_str));
-        }
-
-        columns_sql.push(col_sql);
-
-        if col_def.primary_key {
-            primary_keys.push(col_name.clone());
-        }
-
-        if let Some(ref fk) = col_def.foreign_key {
-            let on_delete = fk.on_delete.as_deref().unwrap_or("NO ACTION");
-            foreign_keys.push(format!(
-                "    CONSTRAINT fk_{}_{} FOREIGN KEY ({}) REFERENCES {} ({}) ON DELETE {}",
-                table_name, col_name, col_name, fk.table, fk.column, on_delete
-            ));
-        }
-    }
-
-    // Add primary key constraint
-    if !primary_keys.is_empty() {
-        columns_sql.push(format!("    PRIMARY KEY ({})", primary_keys.join(", ")));
-    }
-
-    // Add unique constraints
-    for constraint in &table.unique_constraints {
-        columns_sql.push(format!(
-            "    CONSTRAINT {} UNIQUE ({})",
-            constraint.name,
-            constraint.columns.join(", ")
-        ));
-    }
-
-    // Add foreign key constraints
-    columns_sql.extend(foreign_keys);
-
-    format!(
-        "CREATE TABLE IF NOT EXISTS {} (\n{}\n){}",
-        table_name,
-        columns_sql.join(",\n"),
-        table_suffix
-    )
 }
 
 /// JSON to Database converter
@@ -189,9 +105,8 @@ impl JsonToDb {
         Ok(Self { schema, db_manager })
     }
 
-    /// Generic method to generate CREATE TABLE statements
-    fn generate_create_table<F>(
-        &self,
+    /// Static method to generate CREATE TABLE statements (used for both instance and test methods)
+    fn generate_create_table_static<F>(
         table_name: &str,
         table: &TableDefinition,
         type_converter: F,
@@ -272,6 +187,20 @@ impl JsonToDb {
             columns_sql.join(",\n"),
             table_suffix
         )
+    }
+
+    /// Generic method to generate CREATE TABLE statements
+    fn generate_create_table<F>(
+        &self,
+        table_name: &str,
+        table: &TableDefinition,
+        type_converter: F,
+        table_suffix: &str,
+    ) -> String
+    where
+        F: Fn(&str) -> String,
+    {
+        Self::generate_create_table_static(table_name, table, type_converter, table_suffix)
     }
 
     /// Generates a CREATE TABLE statement for PostgreSQL
