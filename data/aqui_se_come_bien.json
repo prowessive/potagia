@@ -1,0 +1,52 @@
+{
+  "business_name": "Aquí se come bien",
+  "databases": [
+    {
+      "database_name": "rbac",
+      "structure": "data/rbac.json"
+    },
+    {
+      "database_name": "potagia",
+      "structure": "data/potagia.json"
+    },
+    {
+      "database_name": "aqui_se_come_bien",
+      "structure":{
+        "tables": [
+          {
+            "name": "categories",
+            "description": "Classification of food and beverages available in the menu.",
+            "columns": ["id", "category_name", "is_active"],
+            "data": [
+              {"id": 1, "category_name": "Main Courses", "is_active": true},
+              {"id": 2, "category_name": "Appetizers", "is_active": true},
+              {"id": 3, "category_name": "Beverages", "is_active": true},
+              {"id": 4, "category_name": "Desserts", "is_active": false}
+            ]
+          },
+          {
+            "name": "products",
+            "description": "List of individual food items and drinks with pricing.",
+            "columns": ["id", "name", "price", "category_id", "stock_quantity"],
+            "data": [
+              {"id": 101, "name": "Classic Cheeseburger", "price": 12.50, "category_id": 1, "stock_quantity": 50},
+              {"id": 102, "name": "Caesar Salad", "price": 9.00, "category_id": 1, "stock_quantity": 30},
+              {"id": 103, "name": "Garlic Bread", "price": 4.50, "category_id": 2, "stock_quantity": 100},
+              {"id": 104, "name": "Iced Lemon Tea", "price": 3.00, "category_id": 3, "stock_quantity": 200}
+            ]
+          },
+          {
+            "name": "orders",
+            "description": "Records of customer transactions and order status.",
+            "columns": ["id", "order_date", "total_amount", "status", "table_number"],
+            "data": [
+              {"id": 5001, "order_date": "2024-05-20T14:30:00Z", "total_amount": 25.50, "status": "completed", "table_number": 5},
+              {"id": 5002, "order_date": "2024-05-20T14:45:00Z", "total_amount": 12.00, "status": "pending", "table_number": 2},
+              {"id": 5003, "order_date": "2024-05-20T15:00:00Z", "total_amount": 42.10, "status": "preparing", "table_number": 10}
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
