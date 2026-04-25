@@ -1,0 +1,37 @@
+{
+  "name": "rbac",
+  "tables": [
+    {
+      "name": "roles",
+      "description": "Defines the available security levels in the system.",
+      "columns": ["id", "role_name", "description"],
+      "data": [
+        {"id": 1, "role_name": "admin", "description": "Full administrative access"},
+        {"id": 2, "role_name": "editor", "description": "Can edit and publish content"},
+        {"id": 3, "role_name": "viewer", "description": "Read-only access"}
+      ]
+    },
+    {
+      "name": "permissions",
+      "description": "Specific actions that can be performed on resources.",
+      "columns": ["id", "resource", "action"],
+      "data": [
+        {"id": 101, "resource": "users", "action": "write"},
+        {"id": 102, "resource": "content", "action": "edit"},
+        {"id": 103, "resource": "content", "action": "view"}
+      ]
+    },
+    {
+      "name": "role_permissions",
+      "description": "Mapping table that assigns permissions to roles.",
+      "columns": ["role_id", "permission_id"],
+      "data": [
+        {"role_id": 1, "permission_id": 101},
+        {"role_id": 1, "permission_id": 102},
+        {"role_id": 2, "permission_id": 102},
+        {"role_id": 2, "permission_id": 103},
+        {"role_id": 3, "permission_id": 103}
+      ]
+    }
+  ]
+}
