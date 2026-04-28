@@ -1,0 +1,76 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #fffaf3;
+  color: #2c1810;
+  line-height: 1.5;
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #8b4513, #c7772a);
+  color: #fff;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  opacity: 0.9;
+}
+
+.hero h1 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+}
+
+.subtitle {
+  margin: 0.8rem 0 1.4rem;
+}
+
+.cta {
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 700;
+  color: #8b4513;
+  background: #fff;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 1.5rem auto 3rem;
+  padding: 0 1rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #f1e7da;
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(44, 24, 16, 0.06);
+}
+
+.card + .card {
+  margin-top: 1rem;
+}
+
+h2 {
+  margin: 0 0 0.5rem;
+}
+
+ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}

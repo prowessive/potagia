@@ -10,6 +10,9 @@ use std::path::{Path, PathBuf};
 struct Args {
     #[arg(short, long, value_name = "FILE")]
     json_path: PathBuf,
+    /// Optional: import only one database entry by name (e.g., potagia)
+    #[arg(short = 'd', long)]
+    database: Option<String>,
     /// Connection string to 'postgres' database (e.g., postgres://user:pass@localhost/postgres)
     #[arg(short, long, env = "DATABASE_URL")]
     connection_string: String,
@@ -48,6 +51,11 @@ struct TableData {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
+    let json_dir = args
+        .json_path
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_else(|| PathBuf::from("."));
 
     // 1. Leer el archivo maestro
     let content = fs::read_to_string(&args.json_path)?;
@@ -58,6 +66,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     for db_entry in root.databases {
         let db_name = db_entry.database_name;
+
+        if let Some(selected_db) = &args.database {
+            if &db_name != selected_db {
+                continue;
+            }
+        }
+
         println!("--- Processing Database: {} ---", db_name);
 
         // A. Crear la base de datos si no existe
@@ -76,7 +91,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let table_list = match db_entry.structure {
             StructureValue::Direct(tl) => tl,
             StructureValue::Path(p) => {
-                let path = Path::new(&p);
+                let path = if Path::new(&p).is_absolute() {
+                    PathBuf::from(&p)
+                } else {
+                    json_dir.join(&p)
+                };
                 let ext_content = fs::read_to_string(path)
                     .map_err(|e| format!("Could not read external file {}: {}", p, e))?;
                 serde_json::from_str(&ext_content)?

@@ -1,0 +1,31 @@
+{
+  "tables": [
+    {
+      "name": "paths",
+      "description": "Defines the directory structure and logical locations within the system.",
+      "columns": ["id", "path_string", "is_restricted"],
+      "data": [
+        {"id": 1, "path_string": "/", "is_restricted": false},
+        {"id": 2, "path_string": "/admin", "is_restricted": true}
+      ]
+    },
+    {
+      "name": "permissions",
+      "description": "Defines the access levels available for paths and files.",
+      "columns": ["id", "permission_level", "description"],
+      "data": [
+        {"id": 501, "permission_level": "create", "description": "Allows creating new content"},
+        {"id": 502, "permission_level": "read", "description": "Allows viewing and listing content"},
+        {"id": 503, "permission_level": "update", "description": "Allows modifying existing content"},
+        {"id": 504, "permission_level": "delete", "description": "Allows removing content"}
+      ]
+    },
+    {
+      "name": "files",
+      "description": "Individual file records associated with specific paths.",
+      "columns": ["id", "filename", "path_id", "size_kb"],
+      "data": [
+      ]
+    }
+  ]
+}

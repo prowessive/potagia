@@ -23,9 +23,18 @@ Potagia is a CMS written in Rust.
     ```bash
     source config/.env
     export DATABASE_URL="postgres://$DB_USER:$DB_PASS@$DB_HOST/$DB_NAME"
-    cargo run --bin import_json -- --json-path data/aqui_se_come_bien.json
+    cargo run --bin import_json -- \
+      --json-path examples/aqui_se_come_bien/db/aqui_se_come_bien.json \
+      --database potagia
     ```
-6. Build and run the application.
+6. Import files from a folder into `potagia` tables (`paths`, `permissions`, `files`).
+    ```bash
+    source config/.env
+    export DATABASE_URL="postgres://$DB_USER:$DB_PASS@$DB_HOST/potagia"
+    cargo run --bin import_files -- \
+      --source-path examples/aqui_se_come_bien/web
+    ```
+7. Build and run the application.
 ```bash
 cargo run
 ```
