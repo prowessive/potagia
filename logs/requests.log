@@ -22,3 +22,10 @@
 2026-04-28T18:07:12.730236Z  INFO request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=7 ms status=200
 2026-04-28T18:07:12.780643Z  INFO request{method=GET uri=/styles.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=33 ms status=200
 2026-04-28T18:07:12.784477Z  INFO request{method=GET uri=/script.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=35 ms status=200
+2026-04-30T16:22:25.971828Z  INFO sqlx::postgres::notice: relation "permissions" already exists, skipping
+2026-04-30T16:22:25.998312Z  INFO sqlx::postgres::notice: relation "paths" already exists, skipping
+2026-04-30T16:22:25.998813Z  INFO sqlx::postgres::notice: relation "files" already exists, skipping
+2026-04-30T16:22:27.408958Z  INFO request{method=GET uri=/ version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=19 ms status=200
+2026-04-30T16:22:27.427837Z  INFO request{method=GET uri=/styles.css version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=6 ms status=200
+2026-04-30T16:22:27.455250Z  INFO request{method=GET uri=/script.js version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=31 ms status=200
+2026-04-30T16:22:27.460260Z  INFO request{method=GET uri=/favicon.ico version=HTTP/1.1}: tower_http::trace::on_response: finished processing request latency=1 ms status=404
