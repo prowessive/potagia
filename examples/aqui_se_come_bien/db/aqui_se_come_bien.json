@@ -3,11 +3,11 @@
   "databases": [
     {
       "database_name": "rbac",
-      "structure": "data/rbac.json"
+      "structure": "../../../db/rbac.json"
     },
     {
       "database_name": "potagia",
-      "structure": "data/potagia.json"
+      "structure": "../../../db/potagia.json"
     },
     {
       "database_name": "aqui_se_come_bien",

@@ -7,6 +7,10 @@ edition = "2024"
 name = "import_json"
 path = "scripts/import_json.rs"
 
+[[bin]]
+name = "import_files"
+path = "scripts/import_files.rs"
+
 [dependencies]
 axum = "0.8.9"
 tokio = { version = "1.0", features = ["full"] }
@@ -14,3 +18,10 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 sqlx = { version = "0.8.6", features = ["runtime-tokio-rustls", "postgres", "json"] }
 clap = { version = "4.0", features = ["derive", "env"] }
+tracing = "0.1"
+tracing-appender = "0.2"
+tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
+tower-http = { version = "0.6", features = ["trace"] }
+
+[dev-dependencies]
+tower = "0.5"
