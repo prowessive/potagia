@@ -1,4 +1,24 @@
 {
+  "databases": [
+    {
+      "name": "potagia",
+      "schema": "public",
+      "read_only": false,
+      "default": true
+    },
+    {
+      "name": "rbac",
+      "schema": "rbac",
+      "read_only": true,
+      "default": false
+    },
+    {
+      "name": "aqui_se_come_bien",
+      "schema": "aqui_se_come_bien",
+      "read_only": true,
+      "default": false
+    }
+  ],
   "tables": [
     {
       "name": "paths",

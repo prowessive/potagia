@@ -9,8 +9,8 @@
 
 body {
   margin: 0;
-  background: #fffaf3;
-  color: #2c1810;
+  background: #e5edf5;
+  color: #1f2a37;
   line-height: 1.5;
 }
 
@@ -49,17 +49,17 @@ body {
 }
 
 .container {
-  max-width: 780px;
-  margin: 1.5rem auto 3rem;
+  max-width: 1140px;
+  margin: 2rem auto 3rem;
   padding: 0 1rem;
 }
 
 .card {
-  background: #fff;
-  border: 1px solid #f1e7da;
+  background: #f3f8fd;
+  border: 1px solid #c9d9e7;
   border-radius: 14px;
-  padding: 1rem 1.2rem;
-  box-shadow: 0 2px 8px rgba(44, 24, 16, 0.06);
+  padding: 1.4rem;
+  box-shadow: 0 3px 10px rgba(23, 39, 56, 0.08);
 }
 
 .card + .card {
@@ -73,4 +73,152 @@ h2 {
 ul {
   margin: 0;
   padding-left: 1.1rem;
+}
+
+.muted {
+  color: #5d7287;
+}
+
+.admin-shell h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.8vw, 2.5rem);
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.admin-tree {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.tree-group {
+  border: 1px solid #c9d9e7;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+}
+
+.tree-group summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.tree-list {
+  margin-top: 0.5rem;
+}
+
+.crud-link {
+  color: #2d5d90;
+  text-decoration: none;
+}
+
+.crud-link:hover {
+  text-decoration: underline;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.crud-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  background: #fff;
+}
+
+.crud-table th,
+.crud-table td {
+  border: 1px solid #c9d9e7;
+  padding: 0.62rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.crud-table th {
+  background: #dce7f2;
+  font-weight: 700;
+}
+
+.editor-panel {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+  color: #334e68;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid #bfd1e2;
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+  background: #fff;
+}
+
+textarea {
+  min-height: 220px;
+  resize: vertical;
+}
+
+.actions-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  padding: 0.46rem 0.9rem;
+  font-size: 0.94rem;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-sm {
+  padding: 0.28rem 0.62rem;
+  font-size: 0.88rem;
+}
+
+.btn-success {
+  background: #58b35b;
+}
+
+.btn-info {
+  background: #5ba9cd;
+}
+
+.btn-primary {
+  background: #356ca3;
+}
+
+.btn-danger {
+  background: #d85a59;
+}
+
+.btn-neutral {
+  background: #6b7c8f;
+}
+
+.status {
+  margin: 0.4rem 0 0.8rem;
+  color: #2a5277;
 }

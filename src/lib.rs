@@ -1,3 +1,4 @@
+mod admin;
 mod config;
 mod content_service;
 mod database;
@@ -8,6 +9,7 @@ use axum::{
     extract::{Path, State},
     routing::get,
 };
+use admin::AdminService;
 use config::DatabaseConfigResolver;
 use content_service::ContentService;
 use database::DatabaseBootstrapper;
@@ -19,12 +21,14 @@ use tracing::Level;
 
 #[derive(Clone)]
 pub struct AppState {
+    admin_service: AdminService,
     content_service: ContentService,
 }
 
 impl AppState {
     fn new(pool: Arc<PgPool>) -> Self {
         Self {
+            admin_service: AdminService::new(pool.clone()),
             content_service: ContentService::new(pool),
         }
     }
@@ -32,6 +36,26 @@ impl AppState {
 
 pub fn build_app(state: AppState) -> Router {
     Router::new()
+        .route("/admin", get(admin::admin_page_handler))
+        .route(
+            "/admin/crud/{database_name}/{table_name}",
+            get(admin::crud_page_handler),
+        )
+        .route("/api/admin/databases", get(admin::list_databases_handler))
+        .route(
+            "/api/admin/databases/{database_name}/tables",
+            get(admin::list_tables_handler),
+        )
+        .route(
+            "/api/admin/databases/{database_name}/tables/{table_name}/records",
+            get(admin::list_records_handler).post(admin::create_record_handler),
+        )
+        .route(
+            "/api/admin/databases/{database_name}/tables/{table_name}/records/{id}",
+            get(admin::get_record_handler)
+                .put(admin::update_record_handler)
+                .delete(admin::delete_record_handler),
+        )
         .route("/", get(handler_root))
         .route("/{*path}", get(handler_by_path))
         .layer(
