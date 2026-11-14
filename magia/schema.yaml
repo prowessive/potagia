@@ -1,0 +1,39 @@
+schema_version: 1
+name: potagia
+description: Engine-neutral relational schema for the Potagia application.
+
+conventions:
+  naming: snake_case
+  identity_generation: database
+  default_nullable: false
+
+tables:
+  - name: files
+    columns:
+      - name: id
+        type: big_integer
+        generated: identity
+      - name: name
+        type: text
+      - name: content
+        type: binary
+    primary_key: [id]
+
+  - name: paths
+    columns:
+      - name: id
+        type: big_integer
+        generated: identity
+      - name: path
+        type: text
+      - name: file_id
+        type: big_integer
+    primary_key: [id]
+    constraints:
+      - name: paths_file_foreign_key
+        type: foreign_key
+        columns: [file_id]
+        references:
+          table: files
+          columns: [id]
+        on_delete: restrict

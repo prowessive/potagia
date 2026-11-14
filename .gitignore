@@ -27,3 +27,7 @@ rustc-ice-*.txt
 # Added by cargo
 
 /target
+
+# Local container configuration and credentials
+.env
+.secrets/
