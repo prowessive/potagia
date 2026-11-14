@@ -1,0 +1,20 @@
+[package]
+name = "potagia"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+tokio = { version = "1.0", features = ["macros", "net", "rt-multi-thread"] }
+tokio-postgres = "0.7"
+
+[dev-dependencies]
+anyhow = "1.0"
+libc = "0.2"
+reqwest = { version = "0.12", default-features = false }
+tempfile = "3.0"
+tokio = { version = "1.0", features = ["time"] }
+tower = { version = "0.5", features = ["util"] }
+wait-timeout = "0.2"

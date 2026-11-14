@@ -1,0 +1,17 @@
+services:
+  app:
+    image: ${POTAGIA_TEST_IMAGE:?POTAGIA_TEST_IMAGE is required}
+    restart: "no"
+    ports: !override
+      - target: 3000
+        published: "0"
+        host_ip: 127.0.0.1
+        protocol: tcp
+
+  database:
+    restart: "no"
+    ports: !override
+      - target: 5432
+        published: "0"
+        host_ip: 127.0.0.1
+        protocol: tcp

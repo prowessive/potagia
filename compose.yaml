@@ -1,0 +1,92 @@
+name: potagia
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: potagia:0.1.0
+    user: "0:0"
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-potagia}
+      POSTGRES_USER: ${POSTGRES_USER:-potagia}
+      POSTGRES_MAINTENANCE_DB: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    ports:
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    restart: unless-stopped
+    networks:
+      - backend
+    cpus: 0.25
+    mem_limit: 128m
+    pids_limit: 100
+
+  database:
+    image: postgres:18.7-alpine@sha256:75dcac3dfb1cd01ca3536910bbc84128759362f8b118bf8c55b38a94f68f3b73
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-potagia}
+      POSTGRES_USER: ${POSTGRES_USER:-potagia}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    read_only: true
+    tmpfs:
+      - /run/postgresql:size=16m,mode=1777
+      - /tmp:size=16m,mode=1777
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    restart: unless-stopped
+    networks:
+      - backend
+    cpus: 1.0
+    mem_limit: 512m
+    pids_limit: 200
+
+secrets:
+  postgres_password:
+    file: ${POSTGRES_PASSWORD_FILE:-./.secrets/postgres_password}
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:

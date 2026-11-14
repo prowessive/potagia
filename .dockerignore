@@ -1,0 +1,9 @@
+target/
+.git/
+.idea/
+.opencode/
+.env
+.env.*
+!.env.example
+.secrets/
+examples/
